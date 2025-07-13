@@ -45,7 +45,7 @@ graph TD
         end
 
         %% --- Local Data Stores & File System ---
-        subgraph Obsidian_Vault [Obsidian Vault (Git Repo)]
+        subgraph Obsidian_Vault ["Obsidian Vault (Git Repo)"]
             style Obsidian_Vault fill:#fff5e6,stroke:#333,stroke-width:2px
             Vault_C[sources/C-Notes.md]
             Vault_Z[zettels/Z-Notes.md]
