@@ -1,0 +1,15 @@
+# Configuration for the Axon Daemon
+
+# -- File System Paths --
+obsidian_vault_path: "/home/anshul/.obsidian/vault"
+
+# -- WebSocket Server Configuration --
+server_host: "localhost"
+server_port: 8765
+
+# -- Git Version Control --
+git:
+  auto_commit: true
+  auto_push: false # Set to true to automatically push after each commit
+  remote_name: "origin"
+  branch_name: "main"

@@ -1,0 +1,11 @@
+# Core Server & Client
+websockets
+textual
+python-dotenv
+PyYAML
+
+# Google AI
+google-generativeai
+
+# Version Control
+GitPython
