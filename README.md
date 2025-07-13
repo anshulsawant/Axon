@@ -17,7 +17,7 @@ graph TD
         %% --- The TUI Client ---
         subgraph TUI_Client [TUI Client]
             style TUI_Client fill:#e6f3ff,stroke:#333,stroke-width:2px
-            Client_App[axon_client.py<br/>(Textual)]
+            Client_App["axon_client.py<br/>(Textual)"]
             Client_UI(UI Rendering)
             Client_Input(Input Capture)
             Client_Dispatch(Command Dispatcher)
@@ -30,12 +30,12 @@ graph TD
         %% --- The Gemini Daemon ---
         subgraph Gemini_Daemon [Gemini Daemon]
             style Gemini_Daemon fill:#e6ffe6,stroke:#333,stroke-width:2px
-            Daemon_App[geminid.py<br/>(asyncio)]
-            Daemon_State(State Management<br/>Active Sessions)
+            Daemon_App["geminid.py<br/>(asyncio)"]
+            Daemon_State("State Management<br/>Active Sessions")
             Daemon_WS(WebSocket Server)
             Daemon_API(Gemini API Gateway)
-            Daemon_Logic(Knowledge Refinery Logic<br/>Tool Use Engine)
-            Daemon_VC[Version Control Module<br/>(GitPython)]
+            Daemon_Logic("Knowledge Refinery Logic<br/>Tool Use Engine")
+            Daemon_VC["Version Control Module<br/>(GitPython)"]
 
             Daemon_App --> Daemon_State
             Daemon_App --> Daemon_WS
