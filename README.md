@@ -4,7 +4,7 @@
 
 Think of it as a personal, version-controlled "thought processor" that uses Google's Gemini models as a collaborative partner.
 
---
+---
 
 ## System Architecture
 
@@ -12,75 +12,49 @@ Here is a detailed overview of the Axon system architecture:
 
 ```mermaid
 graph TD
-    subgraph User's Local Machine
-
-        %% --- The TUI Client ---
-        subgraph TUI_Client [TUI Client]
-            style TUI_Client fill:#e6f3ff,stroke:#333,stroke-width:2px
-            Client_App["axon_client.py<br/>(Textual)"]
-            Client_UI(UI Rendering)
-            Client_Input(Input Capture)
-            Client_Dispatch(Command Dispatcher)
-
-            Client_App --> Client_UI
-            Client_App --> Client_Input
-            Client_App --> Client_Dispatch
-        end
-
-        %% --- The Gemini Daemon ---
-        subgraph Gemini_Daemon [Gemini Daemon]
-            style Gemini_Daemon fill:#e6ffe6,stroke:#333,stroke-width:2px
-            Daemon_App["geminid.py<br/>(asyncio)"]
-            Daemon_State("State Management<br/>Active Sessions")
-            Daemon_WS(WebSocket Server)
-            Daemon_API(Gemini API Gateway)
-            Daemon_Logic("Knowledge Refinery Logic<br/>Tool Use Engine")
-            Daemon_VC["Version Control Module<br/>(GitPython)"]
-
-            Daemon_App --> Daemon_State
-            Daemon_App --> Daemon_WS
-            Daemon_App --> Daemon_API
-            Daemon_App --> Daemon_Logic
-            Daemon_App --> Daemon_VC
-        end
-
-        %% --- Local Data Stores & File System ---
-        subgraph Obsidian_Vault ["Obsidian Vault (Git Repo)"]
-            style Obsidian_Vault fill:#fff5e6,stroke:#333,stroke-width:2px
-            Vault_C[sources/C-Notes.md]
-            Vault_Z[zettels/Z-Notes.md]
-            Vault_A[assets/*.*]
-            Vault_Git[.git/]
-        end
-
-        subgraph Local_FS [Local File System]
-            style Local_FS fill:#f0f0f0,stroke:#333,stroke-width:2px
-            FS_PDFs(/path/to/pdfs)
-            FS_Images(/path/to/images)
-        end
+    %% --- Main Application Flow (Central Spine) ---
     
+    subgraph TUI_Client [TUI Client]
+        style TUI_Client fill:#e6f3ff,stroke:#333,stroke-width:2px
+        Client_App["axon_client.py<br/>(Textual)<br/>UI & Command Dispatch"]
     end
 
-    %% --- External Services ---
+    subgraph Gemini_Daemon [Gemini Daemon]
+        style Gemini_Daemon fill:#e6ffe6,stroke:#333,stroke-width:2px
+        Daemon_Core["geminid.py Core Logic<br/>(State, WebSocket, Tools)"]
+    end
+
+    subgraph Data_Stores [Local Data & Knowledge Base]
+        style Data_Stores fill:#fff5e6,stroke:#333,stroke-width:2px
+        
+        subgraph Obsidian_Vault["Obsidian Vault (Git Repo)"]
+            Vault_Notes["C-Notes & Z-Notes"]
+            Vault_Assets["/assets"]
+        end
+
+        subgraph Local_FS["Local File System"]
+            FS_Files["Input Files<br/>(PDFs, Images)"]
+        end
+    end
+
+    %% --- External Services (Side Channel) ---
     subgraph External_Services
         style External_Services fill:#fde6e6,stroke:#333,stroke-width:2px
-        API_Gemini[Google Gemini API]
-        Repo_GitHub[GitHub Remote]
+        API_Gemini["Google Gemini API"]
+        Repo_GitHub["GitHub Remote"]
     end
+
 
     %% --- Connections ---
 
-    %% Client <--> Daemon
-    Client_Dispatch -- "WebSocket: JSON Commands & Events" --> Daemon_WS
-
-    %% Daemon --> External Services
-    Daemon_API -- "API Calls" --> API_Gemini
-    Daemon_VC -- "Git Push" --> Repo_GitHub
-
-    %% Daemon --> Local Data
-    Daemon_Logic -- "File I/O" --> Obsidian_Vault
-    Daemon_VC -- "Git Commands" --> Obsidian_Vault
-    Daemon_Logic -- "Read" --> Local_FS
+    %% Central Spine Connections
+    Client_App -- "WebSocket: JSON Commands" --> Daemon_Core
+    Daemon_Core -- "File I/O & Git Commands" --> Obsidian_Vault
+    Daemon_Core -- "Read Input Files" --> Local_FS
+    
+    %% Daemon to External Services (Side Connections)
+    Daemon_Core -- "API Calls" --> API_Gemini
+    Daemon_Core -- "Git Push" --> Repo_GitHub
 ```
 
 ## The Core Problem Axon Solves
@@ -139,4 +113,4 @@ Standard AI chat interfaces are great for casual queries, but they falter during
 
 This project is currently under active development. The goal is to follow the multi-phase execution plan to build a robust and feature-complete personal knowledge engine.
 
---
+---
